@@ -6,15 +6,6 @@ import User from "../models/User"
 
 export const createAccount = async (req : Request, res: Response ) => {
 
-    // Manejo de errores
-    let errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json({
-            errors: errors.array()
-        })
-    }
-    return
-
     const { email, password } = req.body
     const userExist = await User.findOne( { email } )
 
@@ -39,11 +30,6 @@ export const createAccount = async (req : Request, res: Response ) => {
 }
 
 export const login = async ( req: Request, res: Response ) => {
-    // Maneja errores
-    let errors = validationResult( req )
-    if(!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array() })
-    }
 
     const { email, password } = req.body
 
@@ -55,8 +41,12 @@ export const login = async ( req: Request, res: Response ) => {
     }
     
     // Comprobar password
-    checkPassword( password, user.password )
-    console.log(user.password);
+    const isPasswordCorrect = await checkPassword( password, user.password )
+    console.log(isPasswordCorrect);
     
-
+    if(!isPasswordCorrect){
+        const error = new Error('El password es incorrecto')
+        return res.status(401).json({ error:error.message })
+    }
+    res.send('Autenticado...')
 }
