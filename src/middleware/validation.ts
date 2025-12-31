@@ -5,9 +5,6 @@ export const handleInputErrors = (req: Request, res: Response, next: NextFunctio
         // Manejo de errores
     let errors = validationResult(req)
 
-    console.log('Desde validations.ts');
-    
-
     if(!errors.isEmpty()){
         return res.status(400).json({
             errors: errors.array()
