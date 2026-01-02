@@ -1,6 +1,9 @@
 import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import slug from 'slug'
+import formidable from 'formidable'
+import { v4 as uuid } from 'uuid'
+import cloudinary from '../config/cloudinary'
 import { hashPassword, checkPassword } from '../utils/auth'
 import User from "../models/User"
 import { generateJWT } from "../utils/jwt"
@@ -50,7 +53,6 @@ export const login = async ( req: Request, res: Response ) => {
     }
 
     const token = generateJWT({ id: user._id })
-
     res.send( token )
 }
 
@@ -75,6 +77,32 @@ export const updateProfile = async ( req: Request, res: Response ) => {
         await req.user.save()
         res.send('Perfil actualizado correctamente...')
 
+    } catch (e) {
+        const error = new Error('Hubo un error')
+        return res.status(500).json({ error: error.message })
+    }
+}
+
+export const uploadImage = async ( req: Request, res: Response ) => {
+    const form = formidable({ multiples: false })
+    
+    try {
+        form.parse( req , (error, fields, files) => {
+            console.log(files);
+            
+        cloudinary.uploader.upload( files['file'][0].filepath, { public_id: uuid() }, async function( error, result ) {
+            if( error ) {
+                const error = new Error('Hubo un error al subir la imagen')
+                return res.status(500).json({ error: error.message })
+            }
+            if( result ) {
+                //console.log(result.secure_url);
+                req.user.image = result.secure_url
+                await req.user.save()
+                res.json({ image: result.secure_url })
+            }
+        } )
+        })
     } catch (e) {
         const error = new Error('Hubo un error')
         return res.status(500).json({ error: error.message })
