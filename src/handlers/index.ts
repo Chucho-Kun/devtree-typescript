@@ -85,6 +85,8 @@ export const updateProfile = async ( req: Request, res: Response ) => {
 }
 
 export const uploadImage = async ( req: Request, res: Response ) => {
+    console.log('desde uploadImage');
+    
     const form = formidable({ multiples: false })
     
     try {
@@ -98,9 +100,9 @@ export const uploadImage = async ( req: Request, res: Response ) => {
             }
             if( result ) {
                 //console.log(result.secure_url);
-                req.user.image = result.secure_url
+                req.user.imagen = result.secure_url
                 await req.user.save()
-                res.json({ image: result.secure_url })
+                res.json({ imagen: result.secure_url })
             }
         } )
         })
