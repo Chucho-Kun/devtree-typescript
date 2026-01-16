@@ -16,8 +16,8 @@ A platform to register your social networks, you can upload a profile picture al
 React + Typescript + TailwindCSS + Axios + Cloudinary + React Router + React Query
 ## Developer Notes
 ## Deploy on Vercel
-Website hosted on vercel.com server
-[https://client-uptask-node-typescript.vercel.app/](https://devtree-client-chuchokun.netlify.app)
+Backend hosted on render.com server
+https://devtree-typescript-backend.onrender.com
 
 ### Example Profiles
 https://devtree-client-chuchokun.netlify.app/chuchokun
@@ -26,5 +26,5 @@ https://devtree-client-chuchokun.netlify.app/diana-compositora
 #### how to use
 ```
 npm install
-npm run dev
+npm run dev:api
 ```
